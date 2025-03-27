@@ -9,12 +9,10 @@ import os
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-# If you want to load your .env file:
-# pip install python-dotenv
 from dotenv import load_dotenv
 load_dotenv()
+
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 ###############################
 # 1. SENSITIVE CONTENT (REGEX)
@@ -55,7 +53,12 @@ def read_txt_file(file_path: str) -> str:
 ###############################
 # 3. CALL GROQCLOUD Llama 3.1
 ###############################
-def call_groqcloud_chat(user_prompt: str, system_prompt: str = "", max_tokens=300, temperature=0.7):
+def call_groqcloud_chat(
+    user_prompt: str, 
+    system_prompt: str = "", 
+    max_tokens=300, 
+    temperature=0.7
+):
     """
     Calls GroqCloud's Llama 3.1 (8B) via their Chat Completions endpoint.
     system_prompt is optional context or instructions.
@@ -71,28 +74,28 @@ def call_groqcloud_chat(user_prompt: str, system_prompt: str = "", max_tokens=30
         "Content-Type": "application/json"
     }
 
-    # We'll pass messages in the official Chat format
-    # You can tweak the "role": "system" for a stable system prompt
-    # and "role": "user" for the actual chunk or question
+    # Prepare messages in Chat format
     messages = []
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
     messages.append({"role": "user", "content": user_prompt})
 
+    # Build payload
     payload = {
-        "model": "llama-3.1-8b-instant",  # the production model ID from GroqCloud
+        "model": "llama-3.1-8b-instant",  # The production model ID from GroqCloud
         "messages": messages,
-        "max_completion_tokens": max_tokens,
-        "temperature": temperature,
+        "max_completion_tokens": max_tokens,  # Use 'max_tokens' as requested
+        "temperature": temperature
     }
 
+    # Make the request
     response = requests.post(url, json=payload, headers=headers)
     if response.status_code != 200:
-        raise RuntimeError(f"GroqCloud API call failed: {response.text}")
+        st.error(f"GroqCloud call failed: status={response.status_code}, body={response.text}")
+        print("GroqCloud error details:", response.status_code, response.text)
+        raise RuntimeError(f"GroqCloud API call failed with code {response.status_code}")
 
     data = response.json()
-    # Typically the text is at data["choices"][0]["message"]["content"]
-    # Check GroqCloud docs or test for actual structure
     try:
         return data["choices"][0]["message"]["content"]
     except (KeyError, IndexError):
@@ -111,12 +114,10 @@ def summarize_document(text: str):
     """
     redacted = detect_and_redact(text)
 
-    # Split text into ~2000-char chunks (overlap=200 for context)
     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
     chunks = splitter.split_text(redacted)
 
     def summarize_chunk(chunk: str):
-        # We'll put a short system prompt for better formatting
         system_prompt = "You are a helpful assistant. Summarize the user content briefly."
         user_prompt = f"Text:\n{chunk}\n\nSummary:"
         return call_groqcloud_chat(
@@ -126,17 +127,15 @@ def summarize_document(text: str):
             temperature=0.7
         )
 
-    # Summarize chunks in parallel
     partial_summaries = []
     with ThreadPoolExecutor(max_workers=4) as executor:
         for result in executor.map(summarize_chunk, chunks):
             partial_summaries.append(result)
 
-    # Combine partial summaries
     combined_text = " ".join(partial_summaries)
-
-    # Summarize the combined partial summary again
-    final_user_prompt = f"Combine and refine these partial summaries:\n\n{combined_text}\n\nFinal Summary:"
+    final_user_prompt = (
+        f"Combine and refine these partial summaries:\n\n{combined_text}\n\nFinal Summary:"
+    )
     final_result = call_groqcloud_chat(
         user_prompt=final_user_prompt,
         system_prompt="You are a helpful assistant. Please produce a concise final summary.",
@@ -189,20 +188,16 @@ def main():
             st.error("Unsupported file type.")
             return
 
-        # Remove temp file
-        os.remove(temp_filename)
+        os.remove(temp_filename)  # Cleanup
 
-        # Show snippet
         st.subheader("Document Preview:")
         st.write(doc_text[:500] + "..." if len(doc_text) > 500 else doc_text)
 
-        # Summarize
         if st.button("Summarize Document"):
             with st.spinner("Summarizing..."):
                 summary = summarize_document(doc_text)
             st.success(summary)
 
-        # Q&A
         st.subheader("Ask a Question")
         user_question = st.text_input("Your question about this document:")
         if user_question:
@@ -212,3 +207,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
