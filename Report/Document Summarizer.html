@@ -1,0 +1,722 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>INTELLIGENT MULTIFORMAT DOCUMENT SUMMARIZATION AND Q&amp;A</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1c38ae25-7855-8008-8e80-db2399bf4a1e" class="page sans"><header><h1 class="page-title">INTELLIGENT MULTIFORMAT DOCUMENT SUMMARIZATION AND Q&amp;A</h1><p class="page-description"></p></header><div class="page-body"><p id="1c38ae25-7855-802a-84a0-f5499a116fb1" class=""><strong>Name: Monisha Patro</strong></p><p id="1c38ae25-7855-808c-a216-dd2941b4aec0" class=""><strong>Contact: </strong><strong><a href="mailto:monishaapatro@gmail.com">monishaapatro@gmail.com</a></strong></p><hr id="1c38ae25-7855-80ed-b5e6-cd80c7190cd6"/><h1 id="1c38ae25-7855-8005-86ee-defe7ea45cae" class="">USING LLAMA 3.1 (8B) VIA GROQCLOUD</h1><h2 id="1c38ae25-7855-8028-9629-c5e0fd237046" class="">ABSTRACT</h2><p id="1c38ae25-7855-8004-bf32-c6640ccc8e03" class="">In today’s data-driven landscape, vast volumes of text files—ranging from PDF research papers to corporate DOCX reports and everyday TXT documents—necessitate efficient methods of extraction, summarization, and question-answering. This project, <strong>Intelligent Multiformat Document Summarization and Q&amp;A Using Llama 3.1 (8B) via GroqCloud</strong>, aims to unify three core functions within a single application: file uploading and text extraction, chunk-based summarization with parallel processing, and intuitive Q&amp;A based on an entire document context.</p><p id="1c38ae25-7855-8049-8056-fab31ff60cb1" class="">A defining element of this solution is the integration of the <strong>Llama 3.1 (8B)</strong> language model via <strong>GroqCloud</strong>. Rather than hosting large language models locally and wrestling with GPU memory constraints, the project leverages GroqCloud’s production-ready API. The synergy of open-source toolkits (LangChain for chunking, pdfplumber for PDF reading, docx for DOCX files, and Python’s built-in methods for TXT) provides a high-performance pipeline that can parse diverse document types. Sensitive data redaction is built into every step, ensuring privacy through advanced regex detection. Finally, deployment on Streamlit’s Cloud platform offers a free, browser-accessible demonstration, enabling real-time interactions and easy scaling to additional users.</p><p id="1c38ae25-7855-8058-a7b3-c64b46ed4ee0" class="">This project stands at the intersection of convenience, speed, and reliability. By showing how a user can upload any large textual document, automatically produce a meaningful summary, and receive context-sensitive Q&amp;A answers, we demonstrate how state-of-the-art large language model capabilities can be applied practically. From academic research and corporate analyses to personal notes and beyond, the system addresses the growing need to handle massive textual data intelligently and securely.</p><h2 id="1c38ae25-7855-80f5-a71b-dad210092992" class="">INTRODUCTION</h2><p id="1c38ae25-7855-8071-b17b-f19930b3dfee" class="">In an era where information is both abundant and critical, retrieving relevant data can be just as difficult as creating it. Whether you are dealing with thousands of pages of research publications, extensive financial spreadsheets (converted into PDF or DOCX), or simpler textual logs, the effort to manually summarize and glean insights can be enormous. Traditional search engines and manual reading approaches fall short when documents run into tens or hundreds of pages, each requiring meticulous reading and highlight extraction.</p><p id="1c38ae25-7855-80da-b673-c3d89329e0cd" class="">Recent breakthroughs in Large Language Models (LLMs) have broadened horizons for automatic document processing. LLMs can analyze unstructured textual data, identify main ideas or themes, and even engage in question-answering by referencing specific parts of the text. However, straightforward application of LLMs can face bottlenecks, such as the model’s limited context window or the high cost of inference when dealing with extensive texts in a single pass.</p><p id="1c38ae25-7855-8007-a35f-e6e9f59f86cf" class="">This project introduces an <strong>intelligent pipeline</strong> that marries chunk-based approaches with parallel execution, thereby accommodating large documents while maintaining performance. We adopted an open-source mindset for the majority of the workflow, employing pdfplumber for PDF reading, python-docx for DOCX parsing, basic Python I/O for TXT files, and <strong>LangChain’s text-splitting</strong> to chunk up massive text. We also integrated <strong>sensitive data redaction</strong> through regex, ensuring that private information remains protected during summarization or Q&amp;A tasks.</p><p id="1c38ae25-7855-804a-924c-c615c7964caf" class="">The standout piece is the <strong>Llama 3.1 (8B)</strong> model, a robust LLM hosted by <strong>GroqCloud</strong>, which handles all the actual NLP tasks. By outsourcing the model inference to GroqCloud, we offload the complexities of GPU provisioning, memory management, and concurrency handling, letting us focus on the user-facing aspect and chunk-based logic. The final layer—<strong>Streamlit</strong>—presents everything in a streamlined, user-friendly interface where individuals can upload a file, summarize it, and pose queries about the text with minimal friction.</p><h2 id="1c38ae25-7855-80c8-a7c0-e6c8cab16eb3" class="">Why?</h2><ol type="1" id="1c38ae25-7855-80f8-9e68-d1a6b4f13e85" class="numbered-list" start="1"><li><strong>Rising Volume of Textual Data</strong><p id="1c38ae25-7855-80e8-887e-dd0f358f7800" class="">Nearly every domain is affected by the exponential growth in textual data. Analysts, researchers, and professionals across sectors continually need to parse large archives of documents. A robust summarization and Q&amp;A solution drastically shortens the time it takes to glean critical information.</p></li></ol><ol type="1" id="1c38ae25-7855-8004-b8d3-f44bbe265564" class="numbered-list" start="2"><li><strong>Bridging Usability &amp; Advanced NLP</strong><p id="1c38ae25-7855-803d-8f3f-f8bd406e3da0" class="">While advanced NLP models exist, bridging the gap between cutting-edge research and end-user accessibility remains a challenge. We wanted to create a pipeline that anyone, even those without deep ML or devops backgrounds, could appreciate and operate.</p></li></ol><ol type="1" id="1c38ae25-7855-807f-ae62-dcf81ed796a3" class="numbered-list" start="3"><li><strong>Encouraging Responsible AI Use</strong><p id="1c38ae25-7855-8087-841c-c23581781be3" class="">Automated solutions often risk exposing private or sensitive data, especially in confidential documents. Our built-in regex-based redaction ensures an ethical dimension to summarization, demonstrating how a project can incorporate privacy measures from the ground up.</p></li></ol><ol type="1" id="1c38ae25-7855-8093-b47e-f6730cf7ec70" class="numbered-list" start="4"><li><strong>Showcasing a Full Stack Approach</strong><p id="1c38ae25-7855-8065-af24-e3e62fd0b889" class="">From reading multi-format inputs to chunk-splitting and parallel requests, from advanced model calls to front-end design—this project demonstrates a comprehensive end-to-end approach, valuable for students, developers, or companies seeking a template for large-scale text processing.</p></li></ol><h2 id="1c38ae25-7855-8051-9245-ee75822691bc" class=""><strong>Llama 3.1 (8B) </strong>MODEL</h2><p id="1c38ae25-7855-809d-936b-c9dd2e203613" class=""><strong>Llama 3.1 (8B)</strong> is one of the more recent and balanced LLMs, delivering efficient and high-quality inferences without requiring enormous hardware overhead. To provide better context, we compared multiple potential solutions:</p><ol type="1" id="1c38ae25-7855-8047-9824-c7644f1ee8df" class="numbered-list" start="1"><li><strong>GPT-4</strong><ul id="1c38ae25-7855-8018-809f-cd2bfd50a558" class="bulleted-list"><li style="list-style-type:disc"><strong>Pros</strong>: Excellent reasoning, widely recognized name, easy integration with OpenAI’s API.</li></ul><ul id="1c38ae25-7855-801f-8d5d-dd71cbea1f88" class="bulleted-list"><li style="list-style-type:disc"><strong>Cons</strong>: Potentially higher costs, rate limiting, some usage restrictions.</li></ul><ul id="1c38ae25-7855-806b-8bb3-c2cd772ab5f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Why We Didn’t Choose It</strong>: For large documents with chunk-based parallel calls, cost can grow quickly. Also, fine-grained control can be more limited.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-8007-94cb-c5eacb09cb1a" class="numbered-list" start="2"><li><strong>BART or T5</strong><ul id="1c38ae25-7855-80d6-b33d-e7f489ff8c41" class="bulleted-list"><li style="list-style-type:disc"><strong>Pros</strong>: Open-source, decent summarization capabilities.</li></ul><ul id="1c38ae25-7855-80ca-a80d-da68952d5990" class="bulleted-list"><li style="list-style-type:disc"><strong>Cons</strong>: Typically smaller context windows, may require local hosting if we want to avoid huggingface or other hosting solutions.</li></ul><ul id="1c38ae25-7855-8090-8715-f8391e0a57e7" class="bulleted-list"><li style="list-style-type:disc"><strong>Why We Didn’t Choose It</strong>: They don’t always produce as robust Q&amp;A as Llama, and handling large documents might require more manual chunking logic.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-80a7-926e-cbfce2707160" class="numbered-list" start="3"><li><strong>Llama 2 (7B or 13B)</strong><ul id="1c38ae25-7855-807a-8fa1-f557520e5c8d" class="bulleted-list"><li style="list-style-type:disc"><strong>Pros</strong>: High-quality open-source model by Meta, widely recognized in the open community.</li></ul><ul id="1c38ae25-7855-80aa-83e3-f3743af76ff5" class="bulleted-list"><li style="list-style-type:disc"><strong>Cons</strong>: Setting it up to run efficiently might still require specialized GPU infrastructure. Licensing and sign-up processes can be more involved.</li></ul><ul id="1c38ae25-7855-8003-9bd7-fc79a65ea0bf" class="bulleted-list"><li style="list-style-type:disc"><strong>Why We Didn’t Choose It</strong>: We found a <em>newer</em>, more context-friendly option via GroqCloud in Llama 3.1, which gave us a faster environment and 8B parameter scale.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-80e4-be46-e1cd2a910edb" class="numbered-list" start="4"><li><strong>Llama 3.1 (8B)</strong><ul id="1c38ae25-7855-80de-9ec0-ddd59b639e05" class="bulleted-list"><li style="list-style-type:disc"><strong>Pros</strong>: Balanced parameter count for speed and accuracy; 8B is big enough for multi-domain knowledge, while still performing well in near real-time. GroqCloud offers immediate production-level hosting.</li></ul><ul id="1c38ae25-7855-80b9-824a-fe676df8c490" class="bulleted-list"><li style="list-style-type:disc"><strong>Cons</strong>: Larger than some minimal models, so concurrency might need attention.</li></ul><ul id="1c38ae25-7855-8095-b6f7-da5b4ce639e6" class="bulleted-list"><li style="list-style-type:disc"><strong>Conclusion</strong>: We selected Llama 3.1 (8B) because it merges the best of both worlds—strong performance and manageable inference overhead, plus direct support from GroqCloud’s infrastructure.</li></ul></li></ol><p id="1c38ae25-7855-8049-9a59-f9b118d017b2" class="">Hence, <strong>Llama 3.1 (8B)</strong> is well-suited for a demonstration of summarizing big text while answering queries with good reasoning. It stands at a sweet spot between smaller (less capable) and massive (costly or slow) models.</p><h2 id="1c38ae25-7855-80a5-a4f8-e91ab39bb686" class="">GROQCLOUD</h2><p id="1c38ae25-7855-808d-980c-ec268fa592f0" class=""><strong>GroqCloud</strong> is a platform for deploying and running large language models at scale, offering:</p><ul id="1c38ae25-7855-807a-9ebf-cc93c18cba1e" class="bulleted-list"><li style="list-style-type:disc"><strong>API Endpoints</strong>: Instead of building local GPU clusters, we simply call a hosted model with a straightforward REST interface.</li></ul><ul id="1c38ae25-7855-8010-8823-dcfbdeb3adc2" class="bulleted-list"><li style="list-style-type:disc"><strong>Production Tier</strong>: Our model ID—“llama-3.1-8b-instant”—is known to be stable, with potential for concurrency and higher context windows, if needed.</li></ul><ul id="1c38ae25-7855-80fc-b877-f3dd28ca1fe1" class="bulleted-list"><li style="list-style-type:disc"><strong>Competitive Performance</strong>: By focusing on specialized hardware and efficient inference frameworks, GroqCloud can return chat completions quickly.</li></ul><ul id="1c38ae25-7855-803b-b0c1-f687f2b41b35" class="bulleted-list"><li style="list-style-type:disc"><strong>Reduced Operational Complexity</strong>: We only keep track of an API key and an endpoint, letting us focus on the summarization logic rather than GPU memory usage or concurrency locks.</li></ul><p id="1c38ae25-7855-80f9-8cf7-cb851110853f" class="">In essence, GroqCloud’s environment is what makes the entire pipeline feasible without huge overhead. We can parallelize chunk requests and still rely on the platform’s ability to handle concurrency gracefully (subject to rate limits).</p><hr id="1c38ae25-7855-806b-a3c6-cf51932dbb96"/><h2 id="1c38ae25-7855-8030-94b9-d20da41a6954" class="">PROCESS</h2><p id="1c38ae25-7855-80c5-a5a3-cc3796698020" class="">Below is a thorough, step-by-step explanation of how the application works, from uploading a file to returning the final summary or answer. We’ll break down each Python function and the overarching architecture.</p><h3 id="1c38ae25-7855-8048-b6f4-d1e9d48662e4" class="">1. <strong>Project Setup and Import Statements</strong></h3><p id="1c38ae25-7855-80e8-acbf-cf0d47ddd8bf" class="">We begin our code (<code>app.py</code>) by importing:</p><ul id="1c38ae25-7855-8092-8dfe-de1c561d6ec4" class="bulleted-list"><li style="list-style-type:disc"><strong>Streamlit</strong> for the web interface.</li></ul><ul id="1c38ae25-7855-80d0-809e-edfb076f30e3" class="bulleted-list"><li style="list-style-type:disc"><strong>pdfplumber</strong>, <strong>docx</strong>, and Python’s built-in file I/O to handle PDF, DOCX, and TXT files, respectively.</li></ul><ul id="1c38ae25-7855-8094-b89f-dc6c76cf51d3" class="bulleted-list"><li style="list-style-type:disc"><strong>Re</strong> for regex redaction.</li></ul><ul id="1c38ae25-7855-8063-becc-f08c51392ae2" class="bulleted-list"><li style="list-style-type:disc"><strong>Requests</strong> for making API calls to GroqCloud.</li></ul><ul id="1c38ae25-7855-80a9-b41b-cf561c68de70" class="bulleted-list"><li style="list-style-type:disc"><strong>ThreadPoolExecutor</strong> from <code>concurrent.futures</code> to run summarization tasks concurrently.</li></ul><ul id="1c38ae25-7855-8045-be28-f0d7c1182b0a" class="bulleted-list"><li style="list-style-type:disc"><strong>dotenv</strong> for loading environment variables (the GroqCloud API key).</li></ul><ul id="1c38ae25-7855-802d-8062-d38bed452cc1" class="bulleted-list"><li style="list-style-type:disc"><strong>RecursiveCharacterTextSplitter</strong> from LangChain to handle chunk-based splitting.</li></ul><h3 id="1c38ae25-7855-804a-8162-c1843b7b89de" class="">2. <strong>Loading the Environment Variable</strong></h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1c38ae25-7855-80db-b02d-e48830c08728" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">from dotenv import load_dotenv
+load_dotenv()
+</code></pre><p id="1c38ae25-7855-80c1-a467-cba72e0181a9" class="">This snippet ensures we read <code>GROQCLOUD_API_KEY</code> from either a <code>.env</code> file locally or from environment variables set in Streamlit Cloud’s “Secrets.” If the key is not found, we raise an error to avoid undefined behavior later.</p><h3 id="1c38ae25-7855-80d4-a014-d4a5e04371ee" class="">3. <strong>Sensitive Data Redaction</strong></h3><p id="1c38ae25-7855-8032-945e-edd7e6af02ba" class="">We define a dictionary:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1c38ae25-7855-80f6-957e-cd602df40cb4" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">SENSITIVE_PATTERNS = {
+  &quot;PHONE&quot;: r&quot;(\+?\d[\d\-\(\) ]{7,}\d)&quot;,
+  &quot;EMAIL&quot;: r&quot;([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)&quot;,
+}
+</code></pre><p id="1c38ae25-7855-8066-8411-efac41efb7fa" class="">And a function <code>detect_and_redact(text)</code> which uses Python’s <code>re.sub()</code> to replace matches with a placeholder like <code>&lt;REDACTED:PHONE&gt;</code> or <code>&lt;REDACTED:EMAIL&gt;</code>. This ensures that personal info does not appear in the final summary or Q&amp;A context.</p><h3 id="1c38ae25-7855-8088-bb64-ef8b42ed468d" class="">4. <strong>Reading Different File Formats</strong></h3><p id="1c38ae25-7855-8032-bdd5-e8921a4f613f" class="">We define:</p><ul id="1c38ae25-7855-8036-ac6f-c60f9ef92d3a" class="bulleted-list"><li style="list-style-type:disc"><code>read_pdf_file(file_path)</code> with <strong>pdfplumber</strong>, iterating over each page’s extracted text.</li></ul><ul id="1c38ae25-7855-80f2-9f68-fb244953e84c" class="bulleted-list"><li style="list-style-type:disc"><code>read_docx_file(file_path)</code> using the <strong>docx</strong> library’s <code>Document</code> object.</li></ul><ul id="1c38ae25-7855-8067-b4b7-e60b811943de" class="bulleted-list"><li style="list-style-type:disc"><code>read_txt_file(file_path)</code> with a simple open/read approach.</li></ul><p id="1c38ae25-7855-8083-ab55-ee0c71f28d29" class="">When the user uploads a file in Streamlit, we temporarily save it locally, check its extension, and call the appropriate function to produce a single large string of text.</p><h3 id="1c38ae25-7855-80f7-af39-ffe45504173a" class="">5. <strong>GroqCloud Chat Inference (</strong><code><strong>call_groqcloud_chat()</strong></code><strong>)</strong></h3><p id="1c38ae25-7855-8087-a24e-eb8cd75282b3" class="">A single function handles the entire cycle of sending a request to the model and retrieving the response:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1c38ae25-7855-80e0-8852-f9d3e2f59ea1" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">def call_groqcloud_chat(user_prompt, system_prompt=&quot;&quot;, max_tokens=300, temperature=0.7):
+    api_key = os.getenv(&quot;GROQCLOUD_API_KEY&quot;)
+    # if not found, raise ValueError
+
+    url = &quot;https://api.groq.com/openai/v1/chat/completions&quot;
+    headers = {&quot;Authorization&quot;: f&quot;Bearer {api_key}&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;}
+
+    # Build an array of messages with optional system prompt
+    messages = []
+    if system_prompt:
+        messages.append({&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: system_prompt})
+    messages.append({&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: user_prompt})
+
+    payload = {
+        &quot;model&quot;: &quot;llama-3.1-8b-instant&quot;,
+        &quot;messages&quot;: messages,
+        &quot;max_completion_tokens&quot;: max_tokens,
+        &quot;temperature&quot;: temperature
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    if response.status_code != 200:
+        # Show an error in Streamlit and print to logs
+        st.error(f&quot;GroqCloud call failed: status={response.status_code}, body={response.text}&quot;)
+        print(&quot;GroqCloud error details:&quot;, response.status_code, response.text)
+        raise RuntimeError(f&quot;GroqCloud API call failed with code {response.status_code}&quot;)
+
+    data = response.json()
+    try:
+        return data[&quot;choices&quot;][0][&quot;message&quot;][&quot;content&quot;]
+    except (KeyError, IndexError):
+        return &quot;[Error: No text returned from GroqCloud response]&quot;
+</code></pre><p id="1c38ae25-7855-80b3-93a5-f77e1283499d" class="">Key Observations:</p><ul id="1c38ae25-7855-80d8-8505-e37cab563516" class="bulleted-list"><li style="list-style-type:disc">We rely on <strong>chat-based</strong> completions, so we pass a list of messages with roles like “system” and “user.”</li></ul><ul id="1c38ae25-7855-8033-8640-cfd242924905" class="bulleted-list"><li style="list-style-type:disc">We handle any non-200 status code by raising an exception. This ensures the user sees an appropriate error in Streamlit if, for example, the key is invalid or we exceed some concurrency limit.</li></ul><h3 id="1c38ae25-7855-8076-86e6-ccf4da5f828f" class="">6. <strong>Summarizing a Document (</strong><code><strong>summarize_document()</strong></code><strong>)</strong></h3><ol type="1" id="1c38ae25-7855-80a5-8619-c6fb5cf8c5d7" class="numbered-list" start="1"><li><strong>Redaction</strong>: The entire document text is first passed to <code>detect_and_redact(text)</code>.</li></ol><ol type="1" id="1c38ae25-7855-8006-a3f7-dc4c47d737a6" class="numbered-list" start="2"><li><strong>Chunk Splitting</strong>:<ul id="1c38ae25-7855-80b5-ad40-cfea970c5679" class="bulleted-list"><li style="list-style-type:disc">We use <code>RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)</code>. This ensures each chunk is around 2,000 characters, with a 200-character overlap to preserve context continuity.</li></ul><ul id="1c38ae25-7855-8064-b5e4-db66f1b72c5b" class="bulleted-list"><li style="list-style-type:disc">Why chunk? We surpass LLM context windows more easily and can parallelize the summarization calls, avoiding a single massive request.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-80b3-8921-ef18b941df61" class="numbered-list" start="3"><li><strong>Parallel Summaries</strong>:<ul id="1c38ae25-7855-8053-97ab-dc844f15d03c" class="bulleted-list"><li style="list-style-type:disc">We define <code>summarize_chunk(chunk)</code> which calls <code>call_groqcloud_chat()</code> with a short system prompt: “You are a helpful assistant. Summarize the user content briefly.”</li></ul><ul id="1c38ae25-7855-8050-bb23-c554e30e0d2c" class="bulleted-list"><li style="list-style-type:disc">We run these chunk operations in a <code>ThreadPoolExecutor(max_workers=4)</code>. For each chunk, we retrieve the partial summary.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-805c-9b6d-c692754c0e2a" class="numbered-list" start="4"><li><strong>Final Combination</strong>:<ul id="1c38ae25-7855-80e9-a66d-d8dadf94f9c6" class="bulleted-list"><li style="list-style-type:disc">We join all partial summaries into <code>combined_text</code>.</li></ul><ul id="1c38ae25-7855-8067-b4f0-cb29c4ea13c6" class="bulleted-list"><li style="list-style-type:disc">Then we make a second call to refine them with a prompt like “Combine and refine these partial summaries...”.</li></ul><ul id="1c38ae25-7855-802e-a5c4-dd1f4a99fae1" class="bulleted-list"><li style="list-style-type:disc">The final summary is returned to the user.</li></ul></li></ol><h3 id="1c38ae25-7855-80e3-99d7-dd7c146e6e29" class="">7. <strong>Q&amp;A Workflow (</strong><code><strong>answer_question()</strong></code><strong>)</strong></h3><ol type="1" id="1c38ae25-7855-80f7-86a5-e817eb37967a" class="numbered-list" start="1"><li>We redact the doc text.</li></ol><ol type="1" id="1c38ae25-7855-8069-8849-d41668582495" class="numbered-list" start="2"><li>Provide a system prompt “You are a helpful assistant. Use the user’s text to answer their question.”</li></ol><ol type="1" id="1c38ae25-7855-8064-9b21-c4f7fff3db08" class="numbered-list" start="3"><li>Concatenate the entire doc with the question in a single user prompt.</li></ol><ol type="1" id="1c38ae25-7855-80e2-aa9a-c8872c8d5e23" class="numbered-list" start="4"><li>Use <code>call_groqcloud_chat()</code> to get the direct answer from GroqCloud.</li></ol><ol type="1" id="1c38ae25-7855-8035-9de0-f976174206bd" class="numbered-list" start="5"><li>Because the doc can be long, we might later incorporate chunk-based retrieval (RAG). But for now, we rely on the entire doc as a single context, assuming it is within feasible context limits or that chunk splitting is not absolutely required for Q&amp;A if the doc is not too large.</li></ol><h3 id="1c38ae25-7855-808e-9d33-f826fa951a26" class="">8. <strong>Streamlit UI</strong></h3><p id="1c38ae25-7855-8032-b9d8-dbdd50075e91" class="">Finally, we have <code>main()</code>:</p><ol type="1" id="1c38ae25-7855-80e3-ac40-d729e9a0120a" class="numbered-list" start="1"><li><strong>Page Config</strong>: <code>st.set_page_config(...)</code> sets the page layout and title.</li></ol><ol type="1" id="1c38ae25-7855-8013-a1f7-f3477c3f242d" class="numbered-list" start="2"><li><strong>Uploader</strong>: <code>st.file_uploader(...)</code> allows the user to pick a file.</li></ol><ol type="1" id="1c38ae25-7855-801a-bd4f-fb05dfc63ce5" class="numbered-list" start="3"><li>We temporarily save the file to disk and detect if it ends with “.pdf,” “.docx,” or “.txt.” The appropriate reading function is called.</li></ol><ol type="1" id="1c38ae25-7855-8017-bab2-c64a8b921a2e" class="numbered-list" start="4"><li>We remove the temporary file.</li></ol><ol type="1" id="1c38ae25-7855-801e-b9ba-ca4533f3a728" class="numbered-list" start="5"><li>The <strong>Preview</strong>: We display up to the first 500 characters.</li></ol><ol type="1" id="1c38ae25-7855-809c-a460-f25ad45c2123" class="numbered-list" start="6"><li><strong>Summarize Button</strong>: If pressed, calls <code>summarize_document(doc_text)</code> and displays the results with <code>st.success(summary)</code>.</li></ol><ol type="1" id="1c38ae25-7855-80ac-8a74-d2de653bb05d" class="numbered-list" start="7"><li><strong>Q&amp;A Section</strong>: The user enters a question in <code>st.text_input(...)</code>, and upon submission, we use <code>answer_question(...)</code> to produce a response.</li></ol><ol type="1" id="1c38ae25-7855-8087-8361-ffb8a8373cfc" class="numbered-list" start="8"><li>We wrap each action in <code>st.spinner</code> so the UI indicates “Summarizing...” or “Generating answer...”.</li></ol><h2 id="1c38ae25-7855-803a-b236-db653fb8dc2b" class="">DEPLOYMENT</h2><h3 id="1c38ae25-7855-8017-a82f-f9b8b85c68b6" class="">1. <strong>Local Testing</strong></h3><p id="1c38ae25-7855-80d8-8113-d114244a6b4f" class="">We initially tested the script locally by:</p><ul id="1c38ae25-7855-80f1-9bc2-ec61d5ede2e5" class="bulleted-list"><li style="list-style-type:disc">Installing dependencies from <code>requirements.txt</code></li></ul><ul id="1c38ae25-7855-8095-8395-d4693dad01b5" class="bulleted-list"><li style="list-style-type:disc">Setting <code>GROQCLOUD_API_KEY</code> in <code>.env</code></li></ul><ul id="1c38ae25-7855-803f-b358-cb5e8219db3a" class="bulleted-list"><li style="list-style-type:disc">Running <code>streamlit run app.py</code></li></ul><p id="1c38ae25-7855-8056-852a-f4810b376dcb" class="">We confirmed correct behaviors in a local environment. Typical issues that can arise here include Python library versions, concurrency issues, or missing API keys. Once all worked locally, we proceeded.</p><h3 id="1c38ae25-7855-8074-aed2-e0f888479ba2" class="">2. <strong>Streamlit Cloud</strong></h3><p id="1c38ae25-7855-8016-b785-dbea95f49bdc" class="">For a <strong>public</strong> demonstration, we used the free-tier hosting on Streamlit Cloud:</p><ol type="1" id="1c38ae25-7855-8034-9ac7-f689e8ec603c" class="numbered-list" start="1"><li><strong>Push</strong> the project to GitHub (ensuring <code>.env</code> and any secrets remain local).</li></ol><ol type="1" id="1c38ae25-7855-8023-ae0b-ee42a0d56f08" class="numbered-list" start="2"><li><strong>Create</strong> a Streamlit Cloud app, referencing the main <code>app.py</code>.</li></ol><ol type="1" id="1c38ae25-7855-801b-b479-f4a5182db12c" class="numbered-list" start="3"><li><strong>Add</strong> our <code>GROQCLOUD_API_KEY</code> in the “Secrets” panel, under the same name, so it’s accessible via <code>os.getenv(&quot;GROQCLOUD_API_KEY&quot;)</code>.</li></ol><ol type="1" id="1c38ae25-7855-80ae-b181-d622951d041c" class="numbered-list" start="4"><li><strong>Deploy</strong>. Once completed, we get a shareable URL.</li></ol><ol type="1" id="1c38ae25-7855-8028-aed9-d357a2c69973" class="numbered-list" start="5"><li><strong>Test</strong>: The same file upload logic works in the hosted environment. If concurrency or rate-limit errors arise, we see them in the logs.</li></ol><p id="1c38ae25-7855-80cc-96a4-f8cb00977bd9" class="">Thus, the entire pipeline is now publicly accessible. Anyone with the link can upload a file and see near real-time summarization or Q&amp;A.</p><h2 id="1c38ae25-7855-8059-8059-f0349dd3d19d" class="">FUTURE IMPROVEMENTS</h2><ol type="1" id="1c38ae25-7855-805c-953a-c78a3bdcb5b7" class="numbered-list" start="1"><li><strong>RAG (Retrieval-Augmented Generation)</strong><p id="1c38ae25-7855-8087-bbd0-c97c7d8ab1a6" class="">For massive documents (hundreds of pages) or entire knowledge bases, chunk-based retrieval with embedding stores (FAISS, ChromaDB) can drastically reduce the context overhead and improve Q&amp;A precision. Summaries and answers become more targeted as only the relevant chunks feed into each LLM call.</p></li></ol><ol type="1" id="1c38ae25-7855-80f9-8c22-de0d2750e9e2" class="numbered-list" start="2"><li><strong>Fine-tuning / Domain Tuning</strong><p id="1c38ae25-7855-80d7-a585-ce92ae091af6" class="">If a specific domain—e.g., legal or scientific—were the focus, we could incorporate domain adaptation or fine-tuning (if GroqCloud’s environment or another service supports custom training). That yields more accurate summaries with domain jargon and context.</p></li></ol><ol type="1" id="1c38ae25-7855-800f-9a14-c0806be7ae82" class="numbered-list" start="3"><li><strong>Advanced Redaction</strong><p id="1c38ae25-7855-803a-a0a6-fed8f28d655a" class="">We currently target phone/email. This can be extended to detect and sanitize addresses, names, credit card patterns, or region-specific sensitive data like social security numbers.</p></li></ol><ol type="1" id="1c38ae25-7855-8024-900e-d9a389d1fcc4" class="numbered-list" start="4"><li><strong>Enhanced UI</strong><ul id="1c38ae25-7855-8005-8fef-e67ab2a20035" class="bulleted-list"><li style="list-style-type:disc">A more sophisticated file manager to handle multiple documents at once.</li></ul><ul id="1c38ae25-7855-8060-bfc1-fd9f79c8c765" class="bulleted-list"><li style="list-style-type:disc">Real-time Q&amp;A without clicking a “submit” button, possibly with streaming tokens.</li></ul><ul id="1c38ae25-7855-80bc-8f26-f343a267a259" class="bulleted-list"><li style="list-style-type:disc">A comprehensive interactive session featuring memory or conversation history.</li></ul></li></ol><ol type="1" id="1c38ae25-7855-80ff-a4c3-c25de6a9e271" class="numbered-list" start="5"><li><strong>Scaling Concurrency</strong><p id="1c38ae25-7855-8095-a63a-d140eee86eaa" class="">If many users simultaneously want to summarize large docs, we might adapt to a queue or specialized concurrency management. That could also involve a paid plan on GroqCloud with higher rate limits.</p></li></ol><ol type="1" id="1c38ae25-7855-8089-9a00-ec9876734643" class="numbered-list" start="6"><li><strong>Metadata Extraction</strong><p id="1c38ae25-7855-80c7-85cf-eef95c3cbf34" class="">We might augment the approach with “metadata-first” extraction from PDF documents—like table of contents or footnotes. Summaries then become more structured, referencing specific sections or page ranges.</p></li></ol><h2 id="1c38ae25-7855-809b-908c-ce3f9271bdc1" class="">CONCLUSION</h2><p id="1c38ae25-7855-80ff-8ec2-c969b61a1cc4" class=""><strong>Intelligent Multiformat Document Summarization and Q&amp;A Using Llama 3.1 (8B) via GroqCloud</strong> provides a model for how advanced NLP tasks can be democratized and streamlined. Instead of building and maintaining large local infrastructure, we utilize a powerful hosted LLM, paralleling chunk-based requests for large documents, and safeguarding user data with regex-based redaction. Deployed on Streamlit Cloud, the entire solution is accessible to anyone with the link, showcasing how swiftly an AI-driven summarization and Q&amp;A system can be spun up, tested, and utilized in real-world settings.</p><p id="1c38ae25-7855-8088-b93d-d51ebbf0d5ec" class="">From commercial applications (like scanning business contracts) to academic pursuits (summarizing lengthy research papers), the system’s ability to yield immediate, concise overviews and handle user queries has immense value. More critically, the solution’s modular design—redaction, chunking, API calls, and a lightweight UI—means it can readily evolve. As the field of large language models advances, we can swap in new models or add retrieval-based pipelines to expand capabilities further. Ultimately, this project stands as a solid foundation to highlight how practical and beneficial LLM-based summarization/Q&amp;A can be when carefully integrated and responsibly deployed.</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
